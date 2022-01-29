@@ -8,7 +8,7 @@ class CogName(commands.Cog):
         self.bot = bot
 
 
-    @commands.Listener()
+    @commands.Cog.listener()
     async def on_command_error(ctx, error):
         print(error)
 
