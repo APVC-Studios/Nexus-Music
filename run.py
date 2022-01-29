@@ -8,7 +8,7 @@ from musicbot.audiocontroller import AudioController
 from musicbot.settings import Settings
 from musicbot.utils import guild_to_audiocontroller, guild_to_settings
 
-initial_extensions = ['musicbot.commands.music', 'musicbot.commands.general', 'musicbot.plugins.button', 'musicbot.plugins.error']
+initial_extensions = ['musicbot.commands.music', 'musicbot.commands.general', 'musicbot.plugins.button', 'musicbot.plugins.error', 'musicbot.plugins.stats']
 bot = commands.Bot(command_prefix=config.BOT_PREFIX,
                    pm_help=True, case_insensitive=True, intents=discord.Intents.all())
 
