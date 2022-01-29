@@ -1,7 +1,7 @@
 BOT_TOKEN: str = ""
 SPOTIFY_ID: str = ""
 SPOTIFY_SECRET: str = ""
-STATCORD_SECRET: str = ""
+STATCORD_KEY: str = ""
 
 BOT_PREFIX = "$"
 
