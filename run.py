@@ -2,16 +2,18 @@ import os
 
 import discord
 from discord.ext import commands
+import statcord
 
 from config import config
 from musicbot.audiocontroller import AudioController
 from musicbot.settings import Settings
 from musicbot.utils import guild_to_audiocontroller, guild_to_settings
 
-initial_extensions = ['musicbot.commands.music', 'musicbot.commands.general', 'musicbot.plugins.button', 'musicbot.plugins.error', 'musicbot.plugins.stats']
+initial_extensions = ['musicbot.commands.music', 'musicbot.commands.general', 'musicbot.plugins.button', 'musicbot.plugins.error']
 bot = commands.Bot(command_prefix=config.BOT_PREFIX,
                    pm_help=True, case_insensitive=True, intents=discord.Intents.all())
-
+api = statcord.Client(bot,config.STATCORD_KEY)
+api.start_loop()
 
 if __name__ == '__main__':
 
@@ -29,6 +31,9 @@ if __name__ == '__main__':
             print(e)
 
 
+@bot.event
+async def on_command(ctx):
+    api.command_run(ctx)
 @bot.event
 async def on_ready():
     print(config.STARTUP_MESSAGE)
