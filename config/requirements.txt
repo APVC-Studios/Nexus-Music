@@ -6,3 +6,4 @@ asyncio
 beautifulsoup4
 spotipy
 statcord.py
+discord-pretty-help

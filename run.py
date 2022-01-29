@@ -3,6 +3,7 @@ import os
 import discord
 from discord.ext import commands
 import statcord
+from pretty_help import DefaultMenu, PrettyHelp
 
 from config import config
 from musicbot.audiocontroller import AudioController
@@ -42,6 +43,9 @@ async def on_ready():
     for guild in bot.guilds:
         await register(guild)
         print("Joined {0}, owned by {1}#{2}".format(guild.name,guild.owner.name,guild.owner.discriminator))
+
+    menu = DefaultMenu('◀️', '▶️', '❌')
+    bot.help_command = PrettyHelp(navigation=menu, color=discord.Colour.green())
 
     print(config.STARTUP_COMPLETE_MESSAGE)
 
