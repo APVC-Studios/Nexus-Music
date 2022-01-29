@@ -69,7 +69,7 @@ class General(commands.Cog):
 
     @commands.command(name='ping', description=config.HELP_PING_LONG, help=config.HELP_PING_SHORT)
     async def _ping(self, ctx):
-        await ctx.send("Pong")
+        await ctx.send(f"Pong! {round(self.bot.latency, 1)}")
 
     @commands.command(name='setting', description=config.HELP_SHUFFLE_LONG, help=config.HELP_SETTINGS_SHORT, aliases=['settings', 'set'])
     @has_permissions(administrator=True)

@@ -2,6 +2,7 @@ import os
 
 import discord
 from discord.ext import commands
+from discord.ext.commands import when_mentioned_or
 import statcord
 from pretty_help import DefaultMenu, PrettyHelp
 
@@ -11,7 +12,7 @@ from musicbot.settings import Settings
 from musicbot.utils import guild_to_audiocontroller, guild_to_settings
 
 initial_extensions = ['musicbot.commands.music', 'musicbot.commands.general', 'musicbot.plugins.button', 'musicbot.plugins.error']
-bot = commands.Bot(command_prefix=config.BOT_PREFIX,
+bot = commands.Bot(command_prefix=when_mentioned_or(config.BOT_PREFIX),
                    pm_help=True, case_insensitive=True, intents=discord.Intents.all())
 api = statcord.Client(bot,config.STATCORD_KEY)
 api.start_loop()
