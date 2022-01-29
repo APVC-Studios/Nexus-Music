@@ -10,7 +10,7 @@ from musicbot.utils import guild_to_audiocontroller, guild_to_settings
 
 initial_extensions = ['musicbot.commands.music', 'musicbot.commands.general', 'musicbot.plugins.button', 'musicbot.plugins.error']
 bot = commands.Bot(command_prefix=config.BOT_PREFIX,
-                   pm_help=True, case_insensitive=True)
+                   pm_help=True, case_insensitive=True, intents=discord.Intents.all())
 
 
 if __name__ == '__main__':
@@ -36,7 +36,7 @@ async def on_ready():
 
     for guild in bot.guilds:
         await register(guild)
-        print("Joined {}".format(guild.name))
+        print("Joined {0}, owned by {1}#{2}".format(guild.name,guild.owner.name,guild.owner.discriminator))
 
     print(config.STARTUP_COMPLETE_MESSAGE)
 
