@@ -52,7 +52,7 @@ async def on_ready():
 
 @bot.event
 async def on_guild_join(guild):
-    print(guild.name)
+    print("Added to {0}, owned by {1}#{2}".format(guild.name,guild.owner.name,guild.owner.discriminator))
     await register(guild)
 
 
