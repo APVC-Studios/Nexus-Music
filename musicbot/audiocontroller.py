@@ -1,5 +1,6 @@
 import asyncio
 import concurrent.futures
+import requests
 
 import discord
 import yt_dlp
@@ -76,7 +77,7 @@ class AudioController(object):
             if song.host == linkutils.Sites.Spotify:
                 conversion = self.search_youtube(await linkutils.convert_spotify(song.info.webpage_url))
                 song.info.webpage_url = conversion
-
+            print("Attempting song download")
             try:
                 downloader = yt_dlp.YoutubeDL(
                     {'format': 'bestaudio', 'title': True, "cookiefile": config.COOKIE_PATH})
@@ -87,7 +88,7 @@ class AudioController(object):
                 downloader = yt_dlp.YoutubeDL(
                     {'title': True, "cookiefile": config.COOKIE_PATH})
                 r = downloader.extract_info(
-                    track, download=False)
+                    song.info.webpage_url, download=False)
 
 
             song.base_url = r.get('url')
@@ -102,8 +103,29 @@ class AudioController(object):
 
         self.playlist.playhistory.append(self.current_song)
 
-        self.guild.voice_client.play(discord.FFmpegPCMAudio(
-            song.base_url, before_options='-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5'), after=lambda e: self.next_song(e))
+        result = requests.get(song.base_url, {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'})
+        print(f"Checking next song, got status code {result.status_code}")
+        if result.status_code == 403:
+            print("Got 403 access denied on song, attempting to get new base_url!")
+            try:
+                downloader = yt_dlp.YoutubeDL(
+                    {'format': 'bestaudio', 'title': True, "cookiefile": config.COOKIE_PATH})
+                track = song.track
+                try:
+                    r = downloader.extract_info(
+                        track, download=False)
+                except Exception as e:
+                    if "ERROR: Sign in to confirm your age" in str(e):
+                        return None
+            except:
+                downloader = yt_dlp.YoutubeDL(
+                    {'title': True, "cookiefile": config.COOKIE_PATH})
+                r = downloader.extract_info(
+                    track, download=False)
+            
+            song.base_url=r.get('url')
+
+        self.guild.voice_client.play(discord.FFmpegPCMAudio(song.base_url, before_options='-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5'), after=lambda e: self.next_song(e))
 
         self.guild.voice_client.source = discord.PCMVolumeTransformer(
             self.guild.voice_client.source)
@@ -145,6 +167,8 @@ class AudioController(object):
         if host == linkutils.Sites.YouTube:
             track = track.split("&list=")[0]
 
+        print(track)
+        
         try:
             downloader = yt_dlp.YoutubeDL(
                 {'format': 'bestaudio', 'title': True, "cookiefile": config.COOKIE_PATH})
@@ -168,7 +192,7 @@ class AudioController(object):
             thumbnail = None
 
         song = Song(linkutils.Origins.Default, host, base_url=r.get('url'), uploader=r.get('uploader'), title=r.get(
-            'title'), duration=r.get('duration'), webpage_url=r.get('webpage_url'), thumbnail=thumbnail)
+            'title'), duration=r.get('duration'), webpage_url=r.get('webpage_url'), thumbnail=thumbnail, track=track)
 
         self.playlist.add(song)
         if self.current_song == None:

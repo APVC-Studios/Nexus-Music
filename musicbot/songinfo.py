@@ -5,12 +5,13 @@ from config import config
 
 
 class Song():
-    def __init__(self, origin, host, base_url=None, uploader=None, title=None, duration=None, webpage_url=None, thumbnail=None):
+    def __init__(self, origin, host, base_url=None, uploader=None, title=None, duration=None, webpage_url=None, thumbnail=None, track=None):
         self.host = host
         self.origin = origin
         self.base_url = base_url
         self.info = self.Sinfo(uploader, title, duration,
                                webpage_url, thumbnail)
+        self.track = track
 
     class Sinfo:
         def __init__(self, uploader, title, duration, webpage_url, thumbnail):
